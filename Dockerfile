@@ -3,7 +3,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils ca-ce
 RUN pip install nibabel torch statsmodels
 RUN update-ca-certificates
 WORKDIR /anima/
-RUN ls
 RUN wget -q https://github.com/Inria-Visages/Anima-Public/releases/download/v4.0.1/Anima-Ubuntu-4.0.1.zip
 RUN unzip Anima-Ubuntu-4.0.1.zip
 RUN git lfs install
