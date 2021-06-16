@@ -141,7 +141,7 @@ def get_new_lesions(pred_name,flair1_name,flair2_name,brain_mask_name):
     WEIGHTS= sorted(glob.glob("/anima/WEIGHTS/*.pt"))
     for weight in WEIGHTS:
         print(weight)
-        MODELS.append(torch.load(weight).eval())
+        MODELS.append(torch.load(weight,map_location=torch.device('cpu')).eval())
     FLAIR_1,FLAIR_2 =load_times(flair1_name, flair2_name, brain_mask_name)
     ax0min,ax0max,ax1min,ax1max,ax2min,ax2max= seg_region(FLAIR_1, overlap=32)
     output=np.zeros(FLAIR_1.shape)
