@@ -6,11 +6,9 @@ import torch.nn as nn
 import statsmodels.api as sm
 from scipy.signal import argrelextrema
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def seg_majvote_times(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
-        offset1=32,offset2=32,offset3=32,crop_bg=0,
-        device=torch.device("cuda" if torch.cuda.is_available() else "cpu")):
+        offset1=32,offset2=32,offset3=32,crop_bg=0):
     MASK = (1-(FLAIR_t1==0).astype('int'))
     ind=np.where(MASK>0)
     indbg=np.where(MASK==0)
@@ -41,11 +39,11 @@ def seg_majvote_times(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
                     T = np.reshape(   FLAIR_t1[x:xx,y:yy,z:zz] , (1,ps[0],ps[1],ps[2], 1))
                     F = np.reshape(    FLAIR_t2[x:xx,y:yy,z:zz] , (1,ps[0],ps[1],ps[2], 1))
                     T=np.concatenate((T,F), axis=4)
-                    T=torch.from_numpy(T.transpose((0,4,1,2,3))).to(device).float()
+                    T=torch.from_numpy(T.transpose((0,4,1,2,3))).float()
                     lista=np.array([0,1])
                     with torch.no_grad():
                         patches = model(T)
-                        patches= patches.cpu().numpy()
+                        patches= patches.numpy()
                         patches= patches.transpose((0,2,3,4,1))
                     #store result
                     local_patch = np.reshape(patches,(patches.shape[1],patches.shape[2],patches.shape[3],patches.shape[4]))
@@ -143,7 +141,7 @@ def get_new_lesions(pred_name,flair1_name,flair2_name,brain_mask_name):
     WEIGHTS= sorted(glob.glob("/anima/WEIGHTS/*.pt"))
     for weight in WEIGHTS:
         print(weight)
-        MODELS.append(torch.load(weight).to(device).eval())
+        MODELS.append(torch.load(weight).eval())
     FLAIR_1,FLAIR_2 =load_times(flair1_name, flair2_name, brain_mask_name)
     ax0min,ax0max,ax1min,ax1max,ax2min,ax2max= seg_region(FLAIR_1, overlap=32)
     output=np.zeros(FLAIR_1.shape)
