@@ -107,7 +107,7 @@ for patientName in os.listdir(patients):
     masks = []
 
     flairs = ['flair_time01_on_middle_space.nii.gz', 'flair_time02_on_middle_space.nii.gz']
-    groundTruths = ['ground_truth_expert1.nii.gz', 'ground_truth_expert2.nii.gz', 'ground_truth_expert3.nii.gz', 'ground_truth_expert4.nii.gz', 'ground_truth.nii.gz']
+    
 
     # For both time points: extract brain
     for flairName in flairs:
@@ -150,6 +150,4 @@ for patientName in os.listdir(patients):
             else:
                 print('Template file ' + templateFlair + ' not found, skipping normalization.')
     
-    # Copy the ground truths to the output directory
-    for imageName in groundTruths:
-        shutil.copyfile(os.path.join(patient, imageName), os.path.join(patientOutput, imageName))
+    

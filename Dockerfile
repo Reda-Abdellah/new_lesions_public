@@ -6,18 +6,23 @@ WORKDIR /anima/
 RUN wget -q https://github.com/Inria-Visages/Anima-Public/releases/download/v4.0.1/Anima-Ubuntu-4.0.1.zip
 RUN unzip Anima-Ubuntu-4.0.1.zip
 RUN git lfs install
-#RUN git clone --depth 1 https://github.com/Inria-Visages/Anima-Scripts-Public.git
-COPY Anima-Scripts-Public /anima/Anima-Scripts-Public
 RUN git clone --depth 1 https://github.com/Inria-Visages/Anima-Scripts-Data-Public.git
 RUN mkdir /root/.anima/
-COPY config.txt /root/.anima
 RUN mkdir /anima/WEIGHTS
-#COPY 2times_in_iqda_v2/* /anima/WEIGHTS
-COPY 2times_in_iqda_v2.zip /anima/WEIGHTS
+RUN mkdir /tmp/test_image
+RUN git clone https://github.com/Reda-Abdellah/new_lesions_public.git
+#RUN ls new_lesions_public/
+RUN cp -avr new_lesions_public/Anima-Scripts-Public /anima/Anima-Scripts-Public
+RUN cp new_lesions_public/config.txt /root/.anima
+RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1NSZilDWXLcHAHP0FyGs945hjj62ypvWy' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1NSZilDWXLcHAHP0FyGs945hjj62ypvWy" -O 2times_in_iqda_v2.zip && rm -rf /tmp/cookies.txt
 RUN unzip 2times_in_iqda_v2.zip
-RUN cp 2times_in_iqda_v2/* ../
-COPY *.py /anima/
+RUN cp 2times_in_iqda_v2/* /anima/WEIGHTS
+RUN cp new_lesions_public/*.py /anima/
 RUN mkdir -p /data/patients/patient_X/
-COPY /data/patients/patient_X/* /data/patients/patient_X/
+RUN mkdir /data/patients/patient_X/
 
 ENTRYPOINT ["python3", "process.py"]
+
+###To Run just do:
+### sudo docker build -t new_lesions_inf .
+### sudo docker run new_lesions_inf -t1 [PATH_time1] -t2 [PATH_time2] -o [PATH_output]
