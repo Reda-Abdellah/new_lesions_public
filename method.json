@@ -4,7 +4,7 @@
     "author": "Reda Abdellah KAMRAOUI",
     "tool-version": "v0.1",
     "schema-version": "0.5",
-    "command-line": " -t1 [FLAIR1] -t2 [FLAIR2] -o [SEGMENTATION]",
+    "command-line": "python3 process.py -t1 [FLAIR1] -t2 [FLAIR2] -o [SEGMENTATION]",
     "container-image": {
         "image": "redaabdellah/unet_with_iqda_v2:v0.1",
         "index": "hub.docker.com",
@@ -44,7 +44,6 @@
     "tags": {
         "purpose": "test MSSeg example method",
         "status": "example"
-    },
-    "doi": ""
+    }
 }
 

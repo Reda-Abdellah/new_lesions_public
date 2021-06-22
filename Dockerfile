@@ -18,7 +18,7 @@ RUN cp new_lesions_public/config.txt /root/.anima
 RUN cp 2times_in_iqda_v2/* /anima/WEIGHTS
 RUN cp new_lesions_public/*.py /anima/
 RUN mkdir -p /data/patients/patient_X/
-ENTRYPOINT ["python3", "process.py"]
+
 
 ###To Run just do:
 ### sudo docker build -t new_lesions_inf .
