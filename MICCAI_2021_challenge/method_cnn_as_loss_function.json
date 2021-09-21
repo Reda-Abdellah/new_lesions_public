@@ -1,0 +1,49 @@
+{
+    "name": "cnn_as_loss_function",
+    "description": "Detect new MS lesions from two FLAIR images.",
+    "author": "Reda Abdellah KAMRAOUI",
+    "tool-version": "v1",
+    "schema-version": "0.5",
+    "command-line": "python3 /anima/process.py -t1 [FLAIR1] -t2 [FLAIR2] -o [SEGMENTATION]",
+    "container-image": {
+        "image": "redaabdellah/cnn_as_loss_function:v1",
+        "index": "hub.docker.com",
+        "type": "docker"
+    },
+    "inputs": [
+        {
+            "id": "flair_time01",
+            "name": "The first flair image (e.g. flair_time01.nii.gz)",
+            "optional": false,
+            "type": "File",
+            "value-key": "[FLAIR1]"
+        },
+        {
+            "id": "flair_time02",
+            "name": "The second flair image (e.g. flair_time02.nii.gz)",
+            "optional": false,
+            "type": "File",
+            "value-key": "[FLAIR2]"
+        },
+        {
+            "id": "output_segmentation",
+            "name": "The output segmentation (e.g. segmentation.nii.gz)",
+            "optional": false,
+            "type": "String",
+            "value-key": "[SEGMENTATION]"
+        }
+    ],
+    "output-files": [
+        {
+            "id": "segmentation",
+            "name": "The segmentation output",
+            "optional": false,
+            "path-template": "[SEGMENTATION]"
+        }
+    ],
+    "tags": {
+        "purpose": "test MSSeg example method",
+        "status": "example"
+    }
+}
+
