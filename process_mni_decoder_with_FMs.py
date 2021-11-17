@@ -32,4 +32,4 @@ affine_intoMNI= times_to_mni(preprocessed_flair1_name, preprocessed_flair2_name,
 mni_les=(args.output_name).replace('.nii','_mni.nii')
 get_new_lesions_mni(mni_les,regestred_FLAIR1_name,regestred_FLAIR2_name,reg_mask_name, strategy='decoder_with_FMs')
 MASK_to_native(affine_intoMNI, mni_les, flair1_name, args.output_name)
-    
+os.remove(mni_les)
