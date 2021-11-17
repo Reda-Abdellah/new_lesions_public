@@ -13,7 +13,7 @@ RUN mkdir /tmp/test_image
 RUN ls
 RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1Uhua7GKeENnNK_VRH6tDAFksluC-wRMc' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1Uhua7GKeENnNK_VRH6tDAFksluC-wRMc" -O decoder_FMs_iqda_for_new_lesions.zip && rm -rf /tmp/cookies.txt
 RUN unzip decoder_FMs_iqda_for_new_lesions.zip
-RUN ls
+RUN ls *
 RUN git clone https://github.com/Reda-Abdellah/new_lesions_public.git
 RUN cp -avr new_lesions_public/Anima-Scripts-Public /anima/Anima-Scripts-Public
 RUN cp new_lesions_public/config.txt /root/.anima

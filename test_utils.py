@@ -62,7 +62,7 @@ def seg_majvote_times_decoder_with_FMs(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
         offset1=32,offset2=32,offset3=32,crop_bg=0,out_dim=2):
     
     seg_filepath= '/anima/WEIGHTS/voxel_only_iqda_v2_k0_nf_24._pt'
-    seg_model=torch.load(seg_filepath)
+    seg_model=torch.load(seg_filepath,map_location=torch.device('cpu')).eval()
     
     MASK = (1-(FLAIR_t1==0).astype('int'))
     ind=np.where(MASK>0)
@@ -101,7 +101,7 @@ def seg_majvote_times_decoder_with_FMs(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
                         FMs1=[FM41,FM31,FM21,FM11]
                         FMs2=[FM42,FM32,FM22,FM12]
                         patches= model(FMs1,FMs2)
-                        patches= patches.cpu().numpy()
+                        patches= patches.numpy()
                         patches= patches.transpose((0,2,3,4,1))
                     #store result
                     local_patch = np.reshape(patches,(patches.shape[1],patches.shape[2],patches.shape[3],patches.shape[4]))
