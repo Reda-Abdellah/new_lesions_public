@@ -224,6 +224,63 @@ class generator(unet_assemblynet_groupnorm):
         out= self.conv_out(decoder_out)
         return out
 
+class detection_decoder(nn.Module):
+    def __init__(self,nf=24,nc=2,dropout_rate=0.5):
+        super().__init__()
+        # 1 input image channel, 6 output channels, 3x3 square convolution
+        # kernel
+        self.combine4_bn = nn.BatchNorm3d((16*nf)*2)
+        self.combine4 = nn.Conv3d((16*nf)*2, (16*nf), 3, padding= 1)
+        self.combine3_bn = nn.BatchNorm3d((8*nf)*2)
+        self.combine3 = nn.Conv3d((8*nf)*2, (8*nf), 3, padding= 1)
+        self.combine2_bn = nn.BatchNorm3d((4*nf)*2)
+        self.combine2 = nn.Conv3d((4*nf)*2, (4*nf), 3, padding= 1)
+        self.combine1_bn = nn.BatchNorm3d((2*nf)*2)
+        self.combine1 = nn.Conv3d((2*nf)*2, (2*nf), 3, padding= 1)
+
+        self.concat1_bn = nn.BatchNorm3d(8*nf+16*nf)
+        self.conv8 = nn.Conv3d((8*nf+16*nf), 8*nf, 3, padding= 1)
+        self.concat2_bn = nn.BatchNorm3d(8*nf+4*nf)
+        self.conv9 = nn.Conv3d(8*nf+4*nf, 4*nf, 3, padding= 1)
+        self.concat3_bn = nn.BatchNorm3d(4*nf+2*nf)
+        self.conv10 = nn.Conv3d(4*nf+2*nf, 4*nf, 3, padding= 1)
+        self.conv_out = nn.Conv3d(4*nf, nc, 3, padding= 1)
+        self.up= nn.Upsample(scale_factor=2,mode='trilinear', align_corners=False)
+        self.pool= nn.MaxPool3d(2)
+        self.dropout= nn.Dropout(dropout_rate)
+        self.softmax=nn.Softmax(dim=1)
+    
+    def combine_FMs(self, FM1, FM2, norm_layer, conv_layer):
+        out=  torch.cat((FM1,FM2), dim=1) 
+        out= norm_layer(out)
+        out= F.relu(conv_layer(out))
+        return out
+    
+    def decoder(self,x4,x3,x2,x1):
+        self.x5=self.up(x4)
+        self.x5=self.concat1_bn(  torch.cat((self.x5,x3), dim=1)  )
+        #self.x5=self.cat1_bn(  torch.cat((self.x5,x3), dim=1)  )
+        self.x5= F.relu(self.conv8(self.x5))
+        self.x6=self.up(self.x5)
+        self.x6=self.concat2_bn(  torch.cat((self.x6,x2), dim=1)  )
+        #self.x6=self.cat2_bn(  torch.cat((self.x6,x2), dim=1)  )
+        self.x6= F.relu(self.conv9(self.x6))
+        self.x7=self.up(self.x6)
+        self.x7=self.concat3_bn(  torch.cat((self.x7,x1), dim=1)  )
+        #self.x7=self.cat3_bn(  torch.cat((self.x7,x1), dim=1)  )
+        self.x7= F.relu(self.conv10(self.x7))
+        return self.softmax(self.conv_out(self.x7))
+
+    def forward(self, x_1,x_2):
+        [x4_1,x3_1,x2_1,x1_1] = x_1
+        [x4_2,x3_2,x2_2,x1_2] = x_2
+        x4_combined=self.combine_FMs(x4_1, x4_2, self.combine4_bn, self.combine4)
+        x3_combined=self.combine_FMs(x3_1, x3_2, self.combine3_bn, self.combine3)
+        x2_combined=self.combine_FMs(x2_1, x2_2, self.combine2_bn, self.combine2)
+        x1_combined=self.combine_FMs(x1_1, x1_2, self.combine1_bn, self.combine1)
+        decoder_out=self.decoder(x4_combined,x3_combined,x2_combined,x1_combined)
+        return decoder_out
+
 ########################################
 ########################################
 
