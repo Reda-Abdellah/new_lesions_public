@@ -61,7 +61,7 @@ def seg_majvote_times(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
 def seg_majvote_times_decoder_with_FMs(FLAIR_t1,FLAIR_t2,MODELS,ps=[64,64,64],
         offset1=32,offset2=32,offset3=32,crop_bg=0,out_dim=2):
     
-    seg_filepath= '/anima/WEIGHTS/*._pt'
+    seg_filepath= '/anima/WEIGHTS/voxel_only_iqda_v2_k0_nf_24._pt'
     seg_model=torch.load(seg_filepath)
     
     MASK = (1-(FLAIR_t1==0).astype('int'))
