@@ -7,6 +7,7 @@ import argparse
 parser = argparse.ArgumentParser(
     description="""Blabla""", formatter_class=argparse.RawTextHelpFormatter)
 
+
 parser.add_argument('-t1', '--time1', type=str, required=True)
 parser.add_argument('-t2', '--time2', type=str, required=True)
 parser.add_argument('-o', '--output_name', type=str, required=True)
@@ -24,3 +25,4 @@ cmd= "python /anima/Anima-Scripts-Public/ms_lesion_segmentation/animaMSLongitudi
 #print(cmd)
 os.system(cmd)
 get_new_lesions(args.output_name,preprocessed_flair1_name,preprocessed_flair2_name,brain_mask_name)
+    

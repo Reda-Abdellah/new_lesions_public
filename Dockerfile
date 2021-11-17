@@ -12,11 +12,15 @@ RUN mkdir /anima/WEIGHTS
 RUN mkdir /tmp/test_image
 RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1NDFSo5V0UkSyFksn5J1jHRwCd9SsoY4Q' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1NDFSo5V0UkSyFksn5J1jHRwCd9SsoY4Q" -O V1_kfold_CHALLENGE_iqda_for_new_lesions.zip && rm -rf /tmp/cookies.txt
 RUN unzip V1_kfold_CHALLENGE_iqda_for_new_lesions.zip
-RUN git clone https://github.com/Reda-Abdellah/new_lesions_public.git
-RUN cp -avr new_lesions_public/Anima-Scripts-Public /anima/Anima-Scripts-Public
-RUN cp new_lesions_public/config.txt /root/.anima
+#RUN git clone https://github.com/Reda-Abdellah/new_lesions_public.git
+#RUN cp -avr new_lesions_public/Anima-Scripts-Public /anima/Anima-Scripts-Public
+#RUN cp new_lesions_public/config.txt /root/.anima
+COPY Anima-Scripts-Public /anima/Anima-Scripts-Public
+COPY Registration /anima/Registration
+COPY config.txt /root/.anima
 RUN cp V1_kfold_CHALLENGE_iqda_for_new_lesions/* /anima/WEIGHTS
-RUN cp new_lesions_public/*.py /anima/
+COPY *.* /anima/
+#RUN cp new_lesions_public/*.py /anima/
 RUN mkdir -p /data/patients/patient_X/
 
 
